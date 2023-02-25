@@ -15,12 +15,12 @@ class GalleryView extends StatelessWidget {
 
 
 
-  needRotation(String path) async {
+  /*needRotation(String path) async {
     Map<String, IfdTag> data =
     await readExifFromBytes(await new File(path).readAsBytes());
     return data['EXIF ExifImageWidth'].values[0] >
         data['EXIF ExifImageLength'].values[0];
-  }
+  }*/
 
 
   @override
