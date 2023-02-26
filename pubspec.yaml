@@ -32,7 +32,8 @@ dependencies:
   flutter:
     sdk: flutter
   camera: ^0.10.3+1
-  flutter_exif_rotation: ^0.5.1
+  #flutter_exif_rotation: ^0.5.1
+  exif: ^3.1.2
 
 
   # The following adds the Cupertino Icons font to your application.

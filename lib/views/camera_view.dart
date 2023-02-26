@@ -69,7 +69,16 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
     return controller?.value.isInitialized==true
         ? Stack(
       children: [
-        Container(child: CameraPreview(controller!),),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return SizedBox(
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              child: CameraPreview(controller!),
+            );
+          },
+        ),
+         //CameraPreview(controller!),
         Padding(padding: EdgeInsets.all(8),
         child: Align(
           alignment: Alignment.bottomRight,
