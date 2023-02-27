@@ -17,6 +17,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   late List<CameraDescription> cameras;
   CameraController? controller;
  XFile? lastImage;
+   Future<void>? _initializeControllerFuture;
 
   @override
   void initState() {
@@ -43,16 +44,17 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  Future<void>? initCamera() async {
+  Future<void> initCamera() async {
     cameras = await availableCameras();
     controller = CameraController(cameras[0], ResolutionPreset.max,);
-    await controller!.initialize(); //then
+    _initializeControllerFuture= controller!.initialize(); //then
     setState(() {});
   }
 
   void onNewCameraSelected(CameraDescription description) async {
     if (controller != null) {
-      await controller!.dispose();
+      //await controller!.dispose();
+      _initializeControllerFuture= controller!.initialize();
     }
     CameraController cameraController = CameraController(
         description, ResolutionPreset.max,);
@@ -66,7 +68,54 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return controller?.value.isInitialized==true
+    return FutureBuilder(
+      future: _initializeControllerFuture,
+        builder: (context,snapshot){
+        switch (snapshot.connectionState){
+          case ConnectionState.waiting:
+            return Center(child: CircularProgressIndicator(),);
+          case ConnectionState.done:
+            return Stack(
+              children: [
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SizedBox(
+                      width: constraints.maxWidth,
+                      height: constraints.maxHeight,
+                      child: CameraPreview(controller!),
+                    );
+                  },
+                ),
+                //CameraPreview(controller!),
+                Padding(padding: EdgeInsets.all(8),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: FloatingActionButton(
+                      child: Icon(Icons.camera),
+                      onPressed: ()async{
+                        photoIsFinished=false;
+                        try{
+                          lastImage= await controller?.takePicture().then((file) {
+                            if(mounted){
+                              imageList.add(file);
+                              photoIsFinished=true;
+                            }
+                          });
+                          //imageList.add(lastImage!);
+                          setState(() {});
+                        }catch(e){
+                          print ('aaa $e');
+                          photoIsFinished=true;
+                        }
+                      },
+                    ),
+                  ),)
+              ],
+            );
+          default: return Container();
+        }
+        });
+   /* return controller?.value.isInitialized==true
         ? Stack(
       children: [
         LayoutBuilder(
@@ -85,9 +134,14 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
           child: FloatingActionButton(
             child: Icon(Icons.camera),
             onPressed: ()async{
-              lastImage= await controller?.takePicture();
-              imageList.add(lastImage!);
+              lastImage= await controller?.takePicture().then((file) {
+                if(mounted){
+                  imageList.add(file);
+                }
+              });
+              //imageList.add(lastImage!);
               setState(() {});
+
             },
           ),
         ),)
@@ -95,6 +149,6 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
     )
         : Center(
             child: CircularProgressIndicator(),
-          );
+          );*/
   }
 }

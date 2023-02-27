@@ -5,6 +5,7 @@ import 'package:media_18/views/camera_view.dart';
 import 'package:media_18/views/gallery_view.dart';
 
 List<XFile> imageList=[];
+bool photoIsFinished=true;
 
 class MediaScreen extends StatefulWidget {
    MediaScreen({Key? key}) : super(key: key);
@@ -26,9 +27,12 @@ class _MediaScreenState extends State<MediaScreen> {
 
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if(photoIsFinished){
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+
   }
 
   List<String> _appBarTitleList=['Camera preview','images gallery'];
@@ -53,7 +57,6 @@ class _MediaScreenState extends State<MediaScreen> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.lightBlue,
         onTap: _onItemTapped,
-        //onTap: _onItemTapped,
       ),
     );
   }
