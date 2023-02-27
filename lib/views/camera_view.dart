@@ -47,14 +47,13 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   Future<void> initCamera() async {
     cameras = await availableCameras();
     controller = CameraController(cameras[0], ResolutionPreset.max,);
-    _initializeControllerFuture= controller!.initialize(); //then
+    _initializeControllerFuture= controller!.initialize();
     setState(() {});
   }
 
   void onNewCameraSelected(CameraDescription description) async {
     if (controller != null) {
-      //await controller!.dispose();
-      _initializeControllerFuture= controller!.initialize();
+      await controller!.dispose();
     }
     CameraController cameraController = CameraController(
         description, ResolutionPreset.max,);
@@ -101,10 +100,9 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
                               photoIsFinished=true;
                             }
                           });
-                          //imageList.add(lastImage!);
                           setState(() {});
                         }catch(e){
-                          print ('aaa $e');
+                          print ('Снимок сделать не удалось: $e');
                           photoIsFinished=true;
                         }
                       },
