@@ -41,7 +41,12 @@ class MediaScreen extends StatelessWidget {
               currentIndex: selectedIndex,
               selectedItemColor: Colors.lightBlue,
               onTap: (index) {
-                if (cameraBloc.getPhotoIsFinished()) {
+                /*if (cameraBloc.getPhotoIsFinished()) {
+                  context
+                      .read<BottomNavigationBarBloc>()
+                      .add(BottomNavigationCurrentEvent(index));
+                }*/
+                if(cameraBloc.state is! CameraCaptureInProgress){
                   context
                       .read<BottomNavigationBarBloc>()
                       .add(BottomNavigationCurrentEvent(index));

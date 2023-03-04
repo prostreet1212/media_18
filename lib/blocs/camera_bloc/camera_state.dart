@@ -12,12 +12,21 @@ class CameraFailure extends CameraState {
   CameraFailure({this.error = "CameraFailure"});
 }
 
-class CameraCaptureInProgress extends CameraState {}
+class CameraCaptureInProgress extends CameraState {
+  CameraCaptureInProgress copyWith(){
+    return CameraCaptureInProgress();
+  }
+}
 
 class CameraCaptureSuccess extends CameraState {
   final XFile file;
 
   CameraCaptureSuccess(this.file);
+
+  CameraCaptureSuccess copyWith(XFile? file){
+    return CameraCaptureSuccess(file?? this.file);
+  }
+
 }
 
 class CameraCaptureFailure extends CameraReady {

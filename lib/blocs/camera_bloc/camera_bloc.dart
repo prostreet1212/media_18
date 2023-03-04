@@ -12,13 +12,13 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
 
   bool isInitialized() => _controller!.value.isInitialized;
 
-  bool _photoIsFinished = true;
+ /* bool _photoIsFinished = true;
 
   bool getPhotoIsFinished() => _photoIsFinished;
 
   set setPhotoIsFinished(bool photoIsFinished) {
     _photoIsFinished = photoIsFinished;
-  }
+  }*/
 
   CameraBloc() : super(CameraInitial()) {
     on<CameraInitialized>((event, emit) async {
@@ -39,15 +39,16 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     });
     on<CameraCaptured>((event, emit) async {
       if (state is CameraReady) {
-        _photoIsFinished = false;
+
         emit(CameraCaptureInProgress());
         try {
           XFile resultPicture = await _controller!.takePicture();
-          emit(CameraCaptureSuccess(resultPicture));
-          _photoIsFinished = true;
+
+          emit(CameraCaptureSuccess(resultPicture).copyWith(resultPicture));
+          //_photoIsFinished = true;
         } on CameraException catch (error) {
           emit(CameraCaptureFailure(error: error.description!));
-          _photoIsFinished = true;
+          //_photoIsFinished = true;
         }
       }
     });

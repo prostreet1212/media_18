@@ -77,8 +77,6 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
                   child: FloatingActionButton(
                     child: const Icon(Icons.camera),
                     onPressed: () async {
-                      cameraBloc!.setPhotoIsFinished = false;
-                      //photoIsFinished = false;
                       cameraBloc!.add(CameraCaptured());
                     },
                   ),
